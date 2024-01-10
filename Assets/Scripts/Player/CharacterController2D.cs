@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -19,26 +20,25 @@ public class CharacterController2D : MonoBehaviour
 	private bool m_FacingRight = true;  // For determining which way the player is currently facing.
 	private Vector3 m_Velocity = Vector3.zero;
 
-	[Header("Events")]
-	[Space]
+	public delegate void LandHandler ();
+	public static event LandHandler OnLandEvent;
 
-	public UnityEvent OnLandEvent;
+	// [System.Serializable]
 
-	[System.Serializable]
-	public class BoolEvent : UnityEvent<bool> { }
+	public delegate void CrouchHandler(bool state);
+	public static event CrouchHandler OnCrouchEvent;
 
-	public BoolEvent OnCrouchEvent;
+	// public class BoolEvent : UnityEvent<bool> { }
+
+	// public BoolEvent OnCrouchEvent;
 	private bool m_wasCrouching = false;
 
 	private void Awake()
 	{
 		m_Rigidbody2D = GetComponent<Rigidbody2D>();
 
-		if (OnLandEvent == null)
-			OnLandEvent = new UnityEvent();
-
-		if (OnCrouchEvent == null)
-			OnCrouchEvent = new BoolEvent();
+		// if (OnCrouchEvent == null)
+		// 	OnCrouchEvent = new BoolEvent();
 	}
 
 	private void FixedUpdate()
@@ -54,8 +54,10 @@ public class CharacterController2D : MonoBehaviour
 			if (colliders[i].gameObject != gameObject)
 			{
 				m_Grounded = true;
-				if (!wasGrounded)
-					OnLandEvent.Invoke();
+				if (!wasGrounded) 
+				{
+					OnLandEvent?.Invoke();
+				}
 			}
 		}
 	}
