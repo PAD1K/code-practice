@@ -11,9 +11,20 @@ public class PlayerMovement : MonoBehaviour
 
     private PlayerInputs _input;
 
-    private float horizontalMove = 0f;
-    private bool jump = false;
-    private bool crouch = false;
+    private float _horizontalMove = 0f;
+    private bool _jump = false;
+    private bool _crouch = false;
+
+    public void onCrouch(bool state) 
+    {
+        animator.SetBool("IsCrouching", state);
+    }
+
+    public void OnLandig() 
+    {
+        _jump = false;
+        animator.SetBool("IsJumping", _jump);
+    }
 
     private void Awake() 
     {
@@ -33,43 +44,31 @@ public class PlayerMovement : MonoBehaviour
         _input.Disable();
     }
 
-    public void onCrouch(bool state) 
-    {
-        animator.SetBool("IsCrouching", state);
-    }
-
-    public void OnLandig() 
-    {
-        jump = false;
-        animator.SetBool("IsJumping", jump);
-    }
-
     // Update is called once per frame
     private void Update() 
     {
         Vector2 moveVector = _input.Player.WASD.ReadValue<Vector2>();
-        horizontalMove = moveVector.x * runSpeed;
-        animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
+        _horizontalMove = moveVector.x * runSpeed;
+        animator.SetFloat("Speed", Mathf.Abs(_horizontalMove));
         
         if (moveVector.y > 0) 
         {
-            jump = true;
+            _jump = true;
             animator.SetBool("IsJumping", true);
         } 
         else if (moveVector.y < 0) 
         {
-            crouch = true;
-            animator.SetBool("IsCrouching", crouch);
+            _crouch = true;
+            animator.SetBool("IsCrouching", _crouch);
         } 
         else 
         {
-            crouch = false;
-            animator.SetBool("IsCrouching", crouch);
+            _crouch = false;
+            animator.SetBool("IsCrouching", _crouch);
         }
     }
 
-    private void FixedUpdate() 
-    {
-        controller.Move(horizontalMove * Time.fixedDeltaTime, crouch, jump);
+    private void FixedUpdate() {
+        controller.Move(_horizontalMove * Time.fixedDeltaTime, _crouch, _jump);
     }
 }
