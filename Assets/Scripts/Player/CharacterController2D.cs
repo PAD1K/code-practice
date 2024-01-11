@@ -12,6 +12,9 @@ public class CharacterController2D : MonoBehaviour
 	[SerializeField] private Transform m_GroundCheck;							// A position marking where to check if the player is grounded.
 	[SerializeField] private Transform m_CeilingCheck;							// A position marking where to check for ceilings
 	[SerializeField] private Collider2D m_CrouchDisableCollider;				// A collider that will be disabled when crouching
+	[SerializeField] private float _dashForce = 4000f;
+	[SerializeField] private float _accelerateForce = 2f;
+	
 
 	const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
 	private bool m_Grounded;            // Whether or not the player is grounded.
@@ -19,6 +22,8 @@ public class CharacterController2D : MonoBehaviour
 	private Rigidbody2D m_Rigidbody2D;
 	private bool m_FacingRight = true;  // For determining which way the player is currently facing.
 	private Vector3 m_Velocity = Vector3.zero;
+
+	private byte _countOfJumps = 2;
 
 	public delegate void LandHandler ();
 	public static event LandHandler OnLandEvent;
@@ -44,7 +49,10 @@ public class CharacterController2D : MonoBehaviour
 	private void FixedUpdate()
 	{
 		bool wasGrounded = m_Grounded;
-		m_Grounded = false;
+		if (_countOfJumps == 0)
+		{
+			m_Grounded = false;
+		}
 
 		// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
 		// This can be done using layers instead but Sample Assets will not overwrite your project settings.
@@ -56,14 +64,14 @@ public class CharacterController2D : MonoBehaviour
 				m_Grounded = true;
 				if (!wasGrounded) 
 				{
+					_countOfJumps = 2;
 					OnLandEvent?.Invoke();
 				}
 			}
 		}
 	}
 
-
-	public void Move(float move, bool crouch, bool jump)
+	public void Move(float move, bool crouch, bool jump, bool isAcceleration)
 	{
 		// If crouching, check to see if the character can stand up
 		if (!crouch)
@@ -89,7 +97,7 @@ public class CharacterController2D : MonoBehaviour
 				}
 
 				// Reduce the speed by the crouchSpeed multiplier
-				move *= m_CrouchSpeed;
+				move *= isAcceleration ? m_CrouchSpeed * _accelerateForce : m_CrouchSpeed;
 
 				// Disable one of the colliders when crouching
 				if (m_CrouchDisableCollider != null)
@@ -108,7 +116,10 @@ public class CharacterController2D : MonoBehaviour
 			}
 
 			// Move the character by finding the target velocity
-			Vector3 targetVelocity = new Vector2(move * 10f, m_Rigidbody2D.velocity.y);
+			// move *= isAcceleration ? move * 10 * _accelerateForce : move * 10f;
+
+			move = isAcceleration ? move * 10 * _accelerateForce : move * 10;
+			Vector3 targetVelocity = new Vector2(move, m_Rigidbody2D.velocity.y);
 			// And then smoothing it out and applying it to the character
 			m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
 
@@ -128,12 +139,12 @@ public class CharacterController2D : MonoBehaviour
 		// If the player should jump...
 		if (m_Grounded && jump)
 		{
+			_countOfJumps--;
+
 			// Add a vertical force to the player.
-			m_Grounded = false;
 			m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
 		}
 	}
-
 
 	private void Flip()
 	{
@@ -144,5 +155,11 @@ public class CharacterController2D : MonoBehaviour
 		Vector3 theScale = transform.localScale;
 		theScale.x *= -1;
 		transform.localScale = theScale;
+	}
+
+	public void Dash() {
+		_dashForce *= m_FacingRight ? 1 : -1;
+
+		m_Rigidbody2D.AddForce(new Vector2(_dashForce, 0f));
 	}
 }

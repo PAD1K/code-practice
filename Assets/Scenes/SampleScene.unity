@@ -4594,7 +4594,7 @@ MonoBehaviour:
   m_JumpForce: 400
   m_CrouchSpeed: 0.36
   m_MovementSmoothing: 0.05
-  m_AirControl: 0
+  m_AirControl: 1
   m_WhatIsGround:
     serializedVersion: 2
     m_Bits: 1
@@ -4679,6 +4679,8 @@ MonoBehaviour:
   controller: {fileID: 1852654697}
   animator: {fileID: 1852654694}
   runSpeed: 40
+  _accelerationValue: 2
+  _dahsForce: 100
 --- !u!1 &1861006400
 GameObject:
   m_ObjectHideFlags: 0
