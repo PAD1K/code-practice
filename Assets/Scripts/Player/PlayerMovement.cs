@@ -15,6 +15,8 @@ public class PlayerMovement : MonoBehaviour
     private bool _jump = false;
     private bool _crouch = false;
 
+    [SerializeField] private float _accelerationValue = 2f;
+
     public void onCrouch(bool state) 
     {
         animator.SetBool("IsCrouching", state);
@@ -48,7 +50,17 @@ public class PlayerMovement : MonoBehaviour
     private void Update() 
     {
         Vector2 moveVector = _input.Player.WASD.ReadValue<Vector2>();
-        _horizontalMove = moveVector.x * runSpeed;
+
+        float acc = 1;
+        if (_input.Player.Acceleration.ReadValue<float>() == 0f) {
+            acc = 1;
+        } 
+        else 
+        {
+            acc = _accelerationValue;
+        }
+
+        _horizontalMove = moveVector.x * runSpeed * acc;
         animator.SetFloat("Speed", Mathf.Abs(_horizontalMove));
         
         if (moveVector.y > 0) 
