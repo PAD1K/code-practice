@@ -52,11 +52,7 @@ public class PlayerMovement : MonoBehaviour
         Vector2 moveVector = _input.Player.WASD.ReadValue<Vector2>();
 
         float acc = 1;
-        if (_input.Player.Acceleration.ReadValue<float>() == 0f) {
-            acc = 1;
-        } 
-        else 
-        {
+        if (_input.Player.Acceleration.ReadValue<float>() == 1f) {
             acc = _accelerationValue;
         }
 
