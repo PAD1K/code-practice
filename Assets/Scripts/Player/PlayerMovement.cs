@@ -14,8 +14,10 @@ public class PlayerMovement : MonoBehaviour
     private float _horizontalMove = 0f;
     private bool _jump = false;
     private bool _crouch = false;
+    private bool _isDash = false;
 
     [SerializeField] private float _accelerationValue = 2f;
+    [SerializeField] private float _dahsForce = 10f;
 
     public void onCrouch(bool state) 
     {
@@ -31,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
     private void Awake() 
     {
         _input = new PlayerInputs();
+
+        _input.Player.Dash.performed += context => Dash();
 
         CharacterController2D.OnLandEvent += OnLandig;
         CharacterController2D.OnCrouchEvent += onCrouch;
@@ -51,14 +55,9 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector2 moveVector = _input.Player.WASD.ReadValue<Vector2>();
 
-        float acc = 1;
-        if (_input.Player.Acceleration.ReadValue<float>() == 1f) {
-            acc = _accelerationValue;
-        }
-
-        _horizontalMove = moveVector.x * runSpeed * acc;
+        _horizontalMove = moveVector.x * runSpeed;
         animator.SetFloat("Speed", Mathf.Abs(_horizontalMove));
-        
+
         if (moveVector.y > 0) 
         {
             _jump = true;
@@ -77,6 +76,20 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void FixedUpdate() {
+        if (_input.Player.Acceleration.ReadValue<float>() == 1f) 
+        {
+            _horizontalMove *= _accelerationValue;
+        }
+        else if (_isDash)
+        {
+            _isDash = false;
+            _horizontalMove *= _dahsForce;
+        } 
+
         controller.Move(_horizontalMove * Time.fixedDeltaTime, _crouch, _jump);
+    }
+
+    private void Dash() {
+        _isDash = true;
     }
 }
