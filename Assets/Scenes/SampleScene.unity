@@ -4601,6 +4601,8 @@ MonoBehaviour:
   m_GroundCheck: {fileID: 819364177}
   m_CeilingCheck: {fileID: 1861006401}
   m_CrouchDisableCollider: {fileID: 1852654699}
+  _dashForce: 4000
+  _accelerateForce: 2
 --- !u!58 &1852654698
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4676,11 +4678,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d812189794d287d48bb1879af241e6b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 1852654697}
-  animator: {fileID: 1852654694}
+  _controller: {fileID: 0}
+  _animator: {fileID: 0}
   runSpeed: 40
-  _accelerationValue: 2
-  _dahsForce: 100
 --- !u!1 &1861006400
 GameObject:
   m_ObjectHideFlags: 0
