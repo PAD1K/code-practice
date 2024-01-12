@@ -44,6 +44,33 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Acceleration"",
+                    ""type"": ""Button"",
+                    ""id"": ""99f8f205-cc4e-414d-b6ef-050bd7f091fc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dash"",
+                    ""type"": ""Button"",
+                    ""id"": ""1f36f7f0-2bbf-4cf7-8b97-dedb251ac58b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""84eeba40-030b-4532-a40d-dcf30eb34394"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -57,17 +84,6 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""WASD"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""8dd16da0-e4f6-4bd2-8ea2-b6af654dfb72"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboar & mouse"",
-                    ""action"": ""WASD"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""down"",
@@ -156,6 +172,39 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Arrows"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ec980d74-6751-4dac-8a13-ed50e822d3a8"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboar & mouse"",
+                    ""action"": ""Acceleration"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ef5e16ff-2f44-4bea-9baf-2d6b21fe3e92"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboar & mouse"",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""feb26171-1b15-4dca-98cf-4b03fa2f36b4"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboar & mouse"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -183,6 +232,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_WASD = m_Player.FindAction("WASD", throwIfNotFound: true);
         m_Player_Arrows = m_Player.FindAction("Arrows", throwIfNotFound: true);
+        m_Player_Acceleration = m_Player.FindAction("Acceleration", throwIfNotFound: true);
+        m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
+        m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -246,12 +298,18 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_WASD;
     private readonly InputAction m_Player_Arrows;
+    private readonly InputAction m_Player_Acceleration;
+    private readonly InputAction m_Player_Dash;
+    private readonly InputAction m_Player_Jump;
     public struct PlayerActions
     {
         private @PlayerInputs m_Wrapper;
         public PlayerActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
         public InputAction @WASD => m_Wrapper.m_Player_WASD;
         public InputAction @Arrows => m_Wrapper.m_Player_Arrows;
+        public InputAction @Acceleration => m_Wrapper.m_Player_Acceleration;
+        public InputAction @Dash => m_Wrapper.m_Player_Dash;
+        public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -267,6 +325,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Arrows.started += instance.OnArrows;
             @Arrows.performed += instance.OnArrows;
             @Arrows.canceled += instance.OnArrows;
+            @Acceleration.started += instance.OnAcceleration;
+            @Acceleration.performed += instance.OnAcceleration;
+            @Acceleration.canceled += instance.OnAcceleration;
+            @Dash.started += instance.OnDash;
+            @Dash.performed += instance.OnDash;
+            @Dash.canceled += instance.OnDash;
+            @Jump.started += instance.OnJump;
+            @Jump.performed += instance.OnJump;
+            @Jump.canceled += instance.OnJump;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -277,6 +344,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Arrows.started -= instance.OnArrows;
             @Arrows.performed -= instance.OnArrows;
             @Arrows.canceled -= instance.OnArrows;
+            @Acceleration.started -= instance.OnAcceleration;
+            @Acceleration.performed -= instance.OnAcceleration;
+            @Acceleration.canceled -= instance.OnAcceleration;
+            @Dash.started -= instance.OnDash;
+            @Dash.performed -= instance.OnDash;
+            @Dash.canceled -= instance.OnDash;
+            @Jump.started -= instance.OnJump;
+            @Jump.performed -= instance.OnJump;
+            @Jump.canceled -= instance.OnJump;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -307,5 +383,8 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     {
         void OnWASD(InputAction.CallbackContext context);
         void OnArrows(InputAction.CallbackContext context);
+        void OnAcceleration(InputAction.CallbackContext context);
+        void OnDash(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
 }
