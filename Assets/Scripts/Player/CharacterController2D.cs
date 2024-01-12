@@ -158,8 +158,8 @@ public class CharacterController2D : MonoBehaviour
 	}
 
 	public void Dash() {
-		_dashForce *= m_FacingRight ? 1 : -1;
+		float direction = m_FacingRight ? 1 : -1;
 
-		m_Rigidbody2D.AddForce(new Vector2(_dashForce, 0f));
+		m_Rigidbody2D.AddForce(new Vector2(_dashForce * direction, 0f));
 	}
 }
