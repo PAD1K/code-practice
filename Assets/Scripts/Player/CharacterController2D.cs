@@ -22,6 +22,7 @@ public class CharacterController2D : MonoBehaviour
 	private Rigidbody2D m_Rigidbody2D;
 	private bool m_FacingRight = true;  // For determining which way the player is currently facing.
 	private Vector3 m_Velocity = Vector3.zero;
+	private byte _maxCountOfJump = 2;
 
 	private byte _countOfJumps = 2;
 
@@ -49,6 +50,13 @@ public class CharacterController2D : MonoBehaviour
 	private void FixedUpdate()
 	{
 		bool wasGrounded = m_Grounded;
+
+		//Чтобы персонаж считался приземленным, если он сделал хотя бы один прыжок. 
+		if (_countOfJumps < _maxCountOfJump)
+		{
+			wasGrounded = false; 
+		}
+
 		if (_countOfJumps == 0)
 		{
 			m_Grounded = false;
@@ -64,7 +72,7 @@ public class CharacterController2D : MonoBehaviour
 				m_Grounded = true;
 				if (!wasGrounded) 
 				{
-					_countOfJumps = 2;
+					_countOfJumps = _maxCountOfJump;
 					OnLandEvent?.Invoke();
 				}
 			}
