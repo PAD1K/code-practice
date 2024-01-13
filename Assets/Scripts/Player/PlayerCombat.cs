@@ -35,7 +35,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void Attack()
     {
-        if (Time.time >= _nextAttackTime) 
+        if (Time.time >= _nextAttackTime && !_animator.GetBool("IsJumping")) 
         {
             _animator.SetTrigger("Attack");
 
