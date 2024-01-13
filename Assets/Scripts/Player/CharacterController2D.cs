@@ -14,6 +14,11 @@ public class CharacterController2D : MonoBehaviour
 	[SerializeField] private Collider2D m_CrouchDisableCollider;				// A collider that will be disabled when crouching
 	[SerializeField] private float _dashForce = 4000f;
 	[SerializeField] private float _accelerateForce = 2f;
+	[SerializeField] Collider2D _boxCollider;
+    [SerializeField] Collider2D _circleCollider;
+    private Vector2 _boxOriginalOffset;
+    private Vector2 _circleOriginalOffset;
+    [SerializeField] private float _jumpForce = 2f;
 	
 
 	const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
@@ -43,8 +48,8 @@ public class CharacterController2D : MonoBehaviour
 	{
 		m_Rigidbody2D = GetComponent<Rigidbody2D>();
 
-		// if (OnCrouchEvent == null)
-		// 	OnCrouchEvent = new BoolEvent();
+		_boxOriginalOffset = _boxCollider.offset;
+        _circleOriginalOffset = _circleCollider.offset;
 	}
 
 	private void FixedUpdate()
@@ -74,6 +79,9 @@ public class CharacterController2D : MonoBehaviour
 				{
 					_countOfJumps = _maxCountOfJump;
 					OnLandEvent?.Invoke();
+					
+					_boxCollider.offset = _boxOriginalOffset;
+					_circleCollider.offset = _circleOriginalOffset;
 				}
 			}
 		}
@@ -151,6 +159,9 @@ public class CharacterController2D : MonoBehaviour
 
 			// Add a vertical force to the player.
 			m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+
+			_boxCollider.offset = new Vector2(_boxOriginalOffset.x, _boxOriginalOffset.y + _jumpForce);
+			_circleCollider.offset = new Vector2(_circleOriginalOffset.x, _circleOriginalOffset.y + _jumpForce);
 		}
 	}
 
