@@ -32,9 +32,7 @@ public class PlayerMovement : MonoBehaviour
         _input = new PlayerInputs();
 
         _input.Player.Jump.performed += context => Jump();
-
         _input.Player.Dash.performed += context => Dash();
-
 
         CharacterController2D.OnLandEvent += OnLandig;
         CharacterController2D.OnCrouchEvent += onCrouch;
