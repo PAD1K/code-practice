@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
 {
     private int _maxHealth = 100;
     private int _currentHealth;
-    void Start()
+    void Awake()
     {
         _currentHealth = _maxHealth;
     }
@@ -26,11 +26,7 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
-        GetComponent<Rigidbody2D>().isKinematic = true;
-        GetComponent<Collider2D>().enabled = false;        
-        this.enabled = false;
-
-        // Destroy(gameObject);
+        Destroy(gameObject);
         
         // TODO:
         // Add die animation.
