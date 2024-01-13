@@ -14,21 +14,10 @@ public class PlayerCombat : MonoBehaviour
 
     private PlayerInputs _input;
 
-    private void OnEnable() 
-    {
-        _input.Enable();
-    }
-
-    private void OnDisable() 
-    {
-        _input.Disable();
-    }
-
     private void Awake() 
     {
         _input = new PlayerInputs();
-
-        Debug.Log(_input);
+        _input.Enable();
 
         _input.Player.Attack.performed += context => Attack();
     }
