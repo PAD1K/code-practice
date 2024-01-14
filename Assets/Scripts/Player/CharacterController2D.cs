@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.Events;
 
 public class CharacterController2D : MonoBehaviour
@@ -19,7 +20,10 @@ public class CharacterController2D : MonoBehaviour
     private Vector2 _boxOriginalOffset;
     private Vector2 _circleOriginalOffset;
     [SerializeField] private float _jumpForce = 2f;
-	
+	[SerializeField] private SurfaceSlider _slider;
+	[SerializeField] private float _maxVelocityX;
+	[SerializeField] private float _maxVelocityY;
+	private bool isGrounded = false;
 
 	const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
 	private bool m_Grounded;            // Whether or not the player is grounded.
@@ -102,7 +106,6 @@ public class CharacterController2D : MonoBehaviour
 		//only control the player if grounded or airControl is turned on
 		if (m_Grounded || m_AirControl)
 		{
-
 			// If crouching
 			if (crouch)
 			{
@@ -132,12 +135,23 @@ public class CharacterController2D : MonoBehaviour
 			}
 
 			// Move the character by finding the target velocity
-			// move *= isAcceleration ? move * 10 * _accelerateForce : move * 10f;
-
 			move = isAcceleration ? move * 10 * _accelerateForce : move * 10;
 			Vector3 targetVelocity = new Vector2(move, m_Rigidbody2D.velocity.y);
-			// And then smoothing it out and applying it to the character
-			m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
+			m_Rigidbody2D.velocity = targetVelocity;
+
+			Vector2 directionAlongSurface = _slider.Project(targetVelocity);
+
+			targetVelocity.Normalize();
+			directionAlongSurface.Normalize();
+
+			float dot = Vector3.Dot(targetVelocity, directionAlongSurface);
+			float epsilon = 0.0001f;
+			
+			// Если на наклонной поверхности, но не в прыжке
+			if(!(Mathf.Abs(dot - 1) < epsilon) && !(Mathf.Abs(dot + 1) < epsilon) && _countOfJumps == _maxCountOfJump)
+			{
+				m_Rigidbody2D.AddForce(Physics2D.gravity * m_Rigidbody2D.mass * 10f);
+			}
 
 			// If the input is moving the player right and the player is facing left...
 			if (move > 0 && !m_FacingRight)
@@ -159,6 +173,9 @@ public class CharacterController2D : MonoBehaviour
 
 			// Add a vertical force to the player.
 			m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+
+			// Чтобы персонаж не получал лишнее ускорение при прыжке на склонах
+			m_Rigidbody2D.velocity = new Vector2(0, 0);
 
 			_boxCollider.offset = new Vector2(_boxOriginalOffset.x, _boxOriginalOffset.y + _jumpForce);
 			_circleCollider.offset = new Vector2(_circleOriginalOffset.x, _circleOriginalOffset.y + _jumpForce);

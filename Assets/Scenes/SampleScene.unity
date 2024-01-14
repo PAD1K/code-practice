@@ -3604,7 +3604,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 9.177543
+  orthographic size: 5.0895185
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -3628,7 +3628,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.4, y: 2.32, z: -10}
+  m_LocalPosition: {x: 22.48, y: -2.26, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4482,6 +4482,7 @@ GameObject:
   - component: {fileID: 1852654699}
   - component: {fileID: 1852654698}
   - component: {fileID: 1852654701}
+  - component: {fileID: 1852654702}
   m_Layer: 3
   m_Name: Penguin
   m_TagString: Player
@@ -4570,7 +4571,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1852654693}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 22.52, y: -2.01, z: 0}
+  m_LocalPosition: {x: 9.59, y: -1.88, z: 0}
   m_LocalScale: {x: 0.8779, y: 0.8779, z: 0.8779}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4603,6 +4604,12 @@ MonoBehaviour:
   m_CrouchDisableCollider: {fileID: 1852654699}
   _dashForce: 4000
   _accelerateForce: 2
+  _boxCollider: {fileID: 1852654699}
+  _circleCollider: {fileID: 1852654698}
+  _jumpForce: 2
+  _slider: {fileID: 1852654702}
+  _maxVelocityX: 5
+  _maxVelocityY: 5
 --- !u!58 &1852654698
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4612,13 +4619,13 @@ CircleCollider2D:
   m_GameObject: {fileID: 1852654693}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 4c126a794a2a7dd42ba03ba126ef4d2c, type: 2}
+  m_Material: {fileID: 6200000, guid: 1a42002f70595e042949b5f2b8e47725, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.04, y: -1.32}
+  m_Offset: {x: -0.04, y: -1.37}
   serializedVersion: 2
-  m_Radius: 0.8588541
+  m_Radius: 0.83
 --- !u!61 &1852654699
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4632,7 +4639,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.053640097, y: -0.44444114}
+  m_Offset: {x: -0.04, y: -0.84}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -4643,7 +4650,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.9687374, y: 1.0748154}
+  m_Size: {x: 1.78, y: 1.84}
   m_EdgeRadius: 0
 --- !u!50 &1852654700
 Rigidbody2D:
@@ -4662,7 +4669,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Interpolate: 2
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
@@ -4681,6 +4688,18 @@ MonoBehaviour:
   _controller: {fileID: 1852654697}
   _animator: {fileID: 1852654694}
   runSpeed: 40
+--- !u!114 &1852654702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1852654693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e43efea42e6d8b449983f3545d01e9b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1861006400
 GameObject:
   m_ObjectHideFlags: 0
@@ -4965,9 +4984,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096524192}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 31.826086, y: 5.857977, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
