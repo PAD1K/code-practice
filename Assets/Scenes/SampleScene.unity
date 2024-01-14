@@ -5005,7 +5005,7 @@ GameObject:
   - component: {fileID: 2145773997}
   - component: {fileID: 2145773996}
   - component: {fileID: 2145773995}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Coin (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
