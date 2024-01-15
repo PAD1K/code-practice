@@ -8,13 +8,24 @@ public class PlayerMovement : MonoBehaviour
     public CharacterController2D _controller;
     public Animator _animator;
     public float runSpeed = 40f;
+    public int CurrentStamina
+    {
+        get {return _currentStamina;}
+        set {_currentStamina = value;}
+    }
     private bool _isAcceleration = false;
     
+    [SerializeField] private int _maxStamina = 100;
+    [SerializeField] private StaminaBar _staminaBar;
+    [SerializeField] private float _staminaDelta = 0.1f;
+    [SerializeField] private float _nextRestoreStaminaTime = 0f;
+    [SerializeField] private int _dashDecreaseValue = 10;
     private PlayerInputs _input;
     private float _horizontalMove = 0f;
     private bool _isjump = false;
     private bool _crouch = false;
     private bool _isDash = false;
+    private int _currentStamina;
 
     public void onCrouch(bool state) 
     {
@@ -36,6 +47,9 @@ public class PlayerMovement : MonoBehaviour
 
         CharacterController2D.OnLandEvent += OnLandig;
         CharacterController2D.OnCrouchEvent += onCrouch;
+
+        _currentStamina = _maxStamina;
+        _staminaBar.SetMaxStaminaValue(_currentStamina);
     }
 
     private void OnEnable() 
@@ -56,12 +70,22 @@ public class PlayerMovement : MonoBehaviour
         _horizontalMove = moveVector.x * runSpeed;
         _animator.SetFloat("Speed", Mathf.Abs(_horizontalMove));
 
-        if (_input.Player.Acceleration.ReadValue<float>() == 1f) 
+        float accelerationState = _input.Player.Acceleration.ReadValue<float>();
+        if (accelerationState == 1f && _currentStamina > 0 && moveVector != new Vector2(0f, 0f)) 
         {
             _isAcceleration = true;
-        } 
+            _currentStamina--;
+            _staminaBar.SetStaminaValue(_currentStamina);
+        }
         else {
             _isAcceleration = false;
+
+            if (Time.time >= _nextRestoreStaminaTime && _currentStamina < 100 && accelerationState == 0f)
+            {
+                _currentStamina++;
+                _staminaBar.SetStaminaValue(_currentStamina);
+                _nextRestoreStaminaTime = Time.time + _staminaDelta;
+            }
         }
 
         if (moveVector.y < 0) 
@@ -95,6 +119,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Dash() 
     {
-        _isDash = true;
+        if(_currentStamina >= _dashDecreaseValue)
+        {
+            _isDash = true;
+            _currentStamina -= _dashDecreaseValue;
+            _staminaBar.SetStaminaValue(_currentStamina);
+        }
     }
 }

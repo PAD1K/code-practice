@@ -14,6 +14,9 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private int _maxHealth = 100;
     [SerializeField] private int _currentHealth;
     [SerializeField] private HealthBar _healtBar;
+    [SerializeField] private int _staminaDecreaseValue = 20;
+    private PlayerMovement _playerMovement;
+
 
     private PlayerInputs _input;
 
@@ -26,11 +29,12 @@ public class PlayerCombat : MonoBehaviour
 
         _currentHealth = _maxHealth;
         _healtBar.SetMaxHealth(_maxHealth);
+        _playerMovement = GetComponent<PlayerMovement>();
     }
 
     private void Attack()
     {
-        if (Time.time >= _nextAttackTime && !_animator.GetBool("IsJumping")) 
+        if (Time.time >= _nextAttackTime && !_animator.GetBool("IsJumping") && _playerMovement.CurrentStamina >= _staminaDecreaseValue) 
         {
             _animator.SetTrigger("Attack");
 
@@ -41,9 +45,9 @@ public class PlayerCombat : MonoBehaviour
                 enemy.GetComponent<Enemy>().TakeDamage(_attackDamage);
             }
 
-            _nextAttackTime = Time.time + 1f / _attackRate;
+            _playerMovement.CurrentStamina -= _staminaDecreaseValue;
 
-            TakeDamage(20);
+            _nextAttackTime = Time.time + 1f / _attackRate;
         }
     }
 
