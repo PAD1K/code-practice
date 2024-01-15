@@ -11,6 +11,9 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private int _attackDamage = 40;
     [SerializeField] private float _attackRate = 2f;
     [SerializeField] private float _nextAttackTime = 0f;
+    [SerializeField] private int _maxHealth = 100;
+    [SerializeField] private int _currentHealth;
+    [SerializeField] private HealthBar _healtBar;
 
     private PlayerInputs _input;
 
@@ -20,6 +23,9 @@ public class PlayerCombat : MonoBehaviour
         _input.Enable();
 
         _input.Player.Attack.performed += context => Attack();
+
+        _currentHealth = _maxHealth;
+        _healtBar.SetMaxHealth(_maxHealth);
     }
 
     private void Attack()
@@ -36,6 +42,8 @@ public class PlayerCombat : MonoBehaviour
             }
 
             _nextAttackTime = Time.time + 1f / _attackRate;
+
+            TakeDamage(20);
         }
     }
 
@@ -46,5 +54,12 @@ public class PlayerCombat : MonoBehaviour
             return;
         }
         Gizmos.DrawWireSphere(_attackPoint.position, _attackRange);
+    }
+
+    private void TakeDamage(int damage)
+    {
+        _currentHealth -= damage;
+
+        _healtBar.SetHealth(_currentHealth);
     }
 }
