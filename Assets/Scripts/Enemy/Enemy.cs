@@ -6,6 +6,8 @@ public class Enemy : MonoBehaviour
 {
     private int _maxHealth = 100;
     private int _currentHealth;
+    private PlayerExperience _playerExperience;
+
     void Awake()
     {
         _currentHealth = _maxHealth;
@@ -26,6 +28,8 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
+        GameObject player = GameObject.Find("Player");
+        player.GetComponent<PlayerExperience>().AddXp(1);
         Destroy(gameObject);
         
         // TODO:
