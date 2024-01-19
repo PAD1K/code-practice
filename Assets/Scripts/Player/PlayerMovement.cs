@@ -20,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _staminaDelta = 0.1f;
     [SerializeField] private float _nextRestoreStaminaTime = 0f;
     [SerializeField] private int _dashDecreaseValue = 10;
+    [SerializeField] private int _attackDecreaseValue = 20;
     private PlayerInputs _input;
     private float _horizontalMove = 0f;
     private bool _isjump = false;
@@ -65,6 +66,22 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     private void Update() 
     {
+        Move();
+    }
+
+    private void FixedUpdate() {
+        if (_isDash)
+        {
+            _isDash = false;
+            _controller.Dash();
+        }
+
+        _controller.Move(_horizontalMove * Time.fixedDeltaTime, _crouch, _isjump, _isAcceleration);
+        _isjump = false;
+    }
+
+    private void Move()
+    {
         Vector2 moveVector = _input.Player.WASD.ReadValue<Vector2>();
 
         _horizontalMove = moveVector.x * runSpeed;
@@ -77,7 +94,8 @@ public class PlayerMovement : MonoBehaviour
             _currentStamina--;
             _staminaBar.SetStaminaValue(_currentStamina);
         }
-        else {
+        else 
+        {
             _isAcceleration = false;
 
             if (Time.time >= _nextRestoreStaminaTime && _currentStamina < 100 && accelerationState == 0f)
@@ -100,17 +118,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void FixedUpdate() {
-        if (_isDash)
-        {
-            _isDash = false;
-            _controller.Dash();
-        }
-
-        _controller.Move(_horizontalMove * Time.fixedDeltaTime, _crouch, _isjump, _isAcceleration);
-        _isjump = false;
-    }
-
     private void Jump() 
     {
         _isjump = true;
@@ -123,6 +130,15 @@ public class PlayerMovement : MonoBehaviour
         {
             _isDash = true;
             _currentStamina -= _dashDecreaseValue;
+            _staminaBar.SetStaminaValue(_currentStamina);
+        }
+    }
+
+    public void DecreaseStamina()
+    {
+        if(_currentStamina >= _attackDecreaseValue)
+        {
+            _currentStamina -= _attackDecreaseValue;
             _staminaBar.SetStaminaValue(_currentStamina);
         }
     }

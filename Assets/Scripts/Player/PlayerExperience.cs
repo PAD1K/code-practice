@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PlayerExperience : MonoBehaviour
 {
-    [SerializeField] private XpBar _xpBar;
-    private int _minXp = 0; 
-    private int _maxXp = 3; 
-    private int _currentXp;
-    private int _level = 0;
+    [SerializeField] private static XpBar _xpBar;
+    private static uint _minXp = 0; 
+    private static uint _maxXp = 3; 
+    private static uint _currentXp;
+    private static uint _level = 0;
 
 
     private void Awake() 
@@ -18,7 +18,7 @@ public class PlayerExperience : MonoBehaviour
         _xpBar.SetMaxXp(_maxXp);
     } 
 
-    public void AddXp(int xpValue)
+    public static void AddXp(uint xpValue)
     {
         _currentXp += xpValue;
         

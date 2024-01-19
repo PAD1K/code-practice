@@ -11,17 +11,17 @@ public class XpBar : MonoBehaviour
     {
         _slider.value = 0;
     }
-    public void SetXp(int xpValue)
+    public void SetXp(uint xpValue)
     {
         _slider.value = xpValue;
     } 
 
-    public void SetMaxXp(int maxXpValue)
+    public void SetMaxXp(uint maxXpValue)
     {
         _slider.maxValue = maxXpValue;
     } 
 
-    public void SetMinXp(int minXpValue)
+    public void SetMinXp(uint minXpValue)
     {
         _slider.minValue = minXpValue;
     } 

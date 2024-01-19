@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerCombat : MonoBehaviour
 {
@@ -11,13 +12,11 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private int _attackDamage = 40;
     [SerializeField] private float _attackRate = 2f;
     [SerializeField] private float _nextAttackTime = 0f;
-    [SerializeField] private int _maxHealth = 100;
-    [SerializeField] private int _currentHealth;
+    [SerializeField] private uint _maxHealth = 100;
+    [SerializeField] private uint _currentHealth;
     [SerializeField] private HealthBar _healtBar;
-    [SerializeField] private int _staminaDecreaseValue = 20;
+    
     private PlayerMovement _playerMovement;
-
-
     private PlayerInputs _input;
 
     private void Awake() 
@@ -26,15 +25,16 @@ public class PlayerCombat : MonoBehaviour
         _input.Enable();
 
         _input.Player.Attack.performed += context => Attack();
-
+        
+        
         _currentHealth = _maxHealth;
-        _healtBar.SetMaxHealth(_maxHealth);
+        _healtBar.SetMaxValue(_maxHealth);
         _playerMovement = GetComponent<PlayerMovement>();
     }
 
     private void Attack()
     {
-        if (Time.time >= _nextAttackTime && !_animator.GetBool("IsJumping") && _playerMovement.CurrentStamina >= _staminaDecreaseValue) 
+        if (Time.time >= _nextAttackTime && !_animator.GetBool("IsJumping")) 
         {
             _animator.SetTrigger("Attack");
 
@@ -45,7 +45,7 @@ public class PlayerCombat : MonoBehaviour
                 enemy.GetComponent<Enemy>().TakeDamage(_attackDamage);
             }
 
-            _playerMovement.CurrentStamina -= _staminaDecreaseValue;
+            _playerMovement.DecreaseStamina();
 
             _nextAttackTime = Time.time + 1f / _attackRate;
         }
@@ -60,10 +60,16 @@ public class PlayerCombat : MonoBehaviour
         Gizmos.DrawWireSphere(_attackPoint.position, _attackRange);
     }
 
-    private void TakeDamage(int damage)
+    private void TakeDamage(uint damage)
     {
         _currentHealth -= damage;
 
-        _healtBar.SetHealth(_currentHealth);
+        _healtBar.Setvalue(_currentHealth);
     }
+
+    // private void AddXp(uint value)
+    // {
+    //     PlayerExperience playerExperience = GetComponent<PlayerExperience>();
+    //     playerExperience.AddXp(value);
+    // }
 }
