@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour 
@@ -8,25 +9,21 @@ public class PlayerMovement : MonoBehaviour
     public CharacterController2D _controller;
     public Animator _animator;
     public float runSpeed = 40f;
-    public int CurrentStamina
-    {
-        get {return _currentStamina;}
-        set {_currentStamina = value;}
-    }
     private bool _isAcceleration = false;
     
-    [SerializeField] private int _maxStamina = 100;
-    [SerializeField] private StaminaBar _staminaBar;
+    [SerializeField] private uint _maxStamina = 100;
+    [SerializeField] private uint _minStamina = 0;
+    [SerializeField] private Bar _staminaBar;
     [SerializeField] private float _staminaDelta = 0.1f;
     [SerializeField] private float _nextRestoreStaminaTime = 0f;
-    [SerializeField] private int _dashDecreaseValue = 10;
-    [SerializeField] private int _attackDecreaseValue = 20;
+    [SerializeField] private uint _dashDecreaseValue = 10;
+    [SerializeField] private uint _attackDecreaseValue = 20;
     private PlayerInputs _input;
     private float _horizontalMove = 0f;
     private bool _isjump = false;
     private bool _crouch = false;
     private bool _isDash = false;
-    private int _currentStamina;
+    private uint _currentStamina;
 
     public void onCrouch(bool state) 
     {
@@ -50,7 +47,9 @@ public class PlayerMovement : MonoBehaviour
         CharacterController2D.OnCrouchEvent += onCrouch;
 
         _currentStamina = _maxStamina;
-        _staminaBar.SetMaxStaminaValue(_currentStamina);
+        _staminaBar.SetMaxValue(_currentStamina);
+        _staminaBar.SetMinValue(_minStamina);
+        _staminaBar.SetValue(_currentStamina);
     }
 
     private void OnEnable() 
@@ -92,7 +91,7 @@ public class PlayerMovement : MonoBehaviour
         {
             _isAcceleration = true;
             _currentStamina--;
-            _staminaBar.SetStaminaValue(_currentStamina);
+            _staminaBar.SetMinValue(_currentStamina);
         }
         else 
         {
@@ -101,7 +100,7 @@ public class PlayerMovement : MonoBehaviour
             if (Time.time >= _nextRestoreStaminaTime && _currentStamina < 100 && accelerationState == 0f)
             {
                 _currentStamina++;
-                _staminaBar.SetStaminaValue(_currentStamina);
+                _staminaBar.SetValue(_currentStamina);
                 _nextRestoreStaminaTime = Time.time + _staminaDelta;
             }
         }
@@ -130,7 +129,7 @@ public class PlayerMovement : MonoBehaviour
         {
             _isDash = true;
             _currentStamina -= _dashDecreaseValue;
-            _staminaBar.SetStaminaValue(_currentStamina);
+            _staminaBar.SetValue(_currentStamina);
         }
     }
 
@@ -139,7 +138,7 @@ public class PlayerMovement : MonoBehaviour
         if(_currentStamina >= _attackDecreaseValue)
         {
             _currentStamina -= _attackDecreaseValue;
-            _staminaBar.SetStaminaValue(_currentStamina);
+            _staminaBar.SetValue(_currentStamina);
         }
     }
 }

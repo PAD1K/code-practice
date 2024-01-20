@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] PlayerExperience _playerXP;
     private int _maxHealth = 100;
     private int _currentHealth;
-    
 
     void Awake()
     {
@@ -28,7 +28,7 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
-        PlayerExperience.AddXp(1);
+        _playerXP.AddXp(1);
         Destroy(gameObject);
         
         // TODO:

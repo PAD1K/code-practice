@@ -13,8 +13,9 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private float _attackRate = 2f;
     [SerializeField] private float _nextAttackTime = 0f;
     [SerializeField] private uint _maxHealth = 100;
+    [SerializeField] private uint _minHealth = 0;
     [SerializeField] private uint _currentHealth;
-    [SerializeField] private HealthBar _healtBar;
+    [SerializeField] private Bar _healtBar;
     
     private PlayerMovement _playerMovement;
     private PlayerInputs _input;
@@ -29,6 +30,8 @@ public class PlayerCombat : MonoBehaviour
         
         _currentHealth = _maxHealth;
         _healtBar.SetMaxValue(_maxHealth);
+        _healtBar.SetMinValue(_minHealth);
+        _healtBar.SetValue(_maxHealth);
         _playerMovement = GetComponent<PlayerMovement>();
     }
 
@@ -64,12 +67,6 @@ public class PlayerCombat : MonoBehaviour
     {
         _currentHealth -= damage;
 
-        _healtBar.Setvalue(_currentHealth);
+        _healtBar.SetValue(_currentHealth);
     }
-
-    // private void AddXp(uint value)
-    // {
-    //     PlayerExperience playerExperience = GetComponent<PlayerExperience>();
-    //     playerExperience.AddXp(value);
-    // }
 }
