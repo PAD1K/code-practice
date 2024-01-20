@@ -20,9 +20,13 @@ public class CharacterController2D : MonoBehaviour
     private Vector2 _circleOriginalOffset;
     [SerializeField] private float _jumpForce = 2f;
 	[SerializeField] private SurfaceSlider _slider;
+ 33-falling-from-corner
+
+
 	[SerializeField] private float _maxVelocityX;
 	[SerializeField] private float _maxVelocityY;
 
+ main
 	const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
 	private bool m_Grounded;            // Whether or not the player is grounded.
 	const float k_CeilingRadius = .2f; // Radius of the overlap circle to determine if the player can stand up
@@ -35,15 +39,8 @@ public class CharacterController2D : MonoBehaviour
 
 	public delegate void LandHandler ();
 	public static event LandHandler OnLandEvent;
-
-	// [System.Serializable]
-
 	public delegate void CrouchHandler(bool state);
 	public static event CrouchHandler OnCrouchEvent;
-
-	// public class BoolEvent : UnityEvent<bool> { }
-
-	// public BoolEvent OnCrouchEvent;
 	private bool m_wasCrouching = false;
 
 	private void Awake()
@@ -144,11 +141,18 @@ public class CharacterController2D : MonoBehaviour
 
 			float dot = Vector3.Dot(targetVelocity, directionAlongSurface);
 			float epsilon = 0.0001f;
-			
+
+			Debug.DrawRay(transform.position, Vector3.down * 3f, Color.green);
+			RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector3.down, 3f, _groundLayer);
+
 			// Если на наклонной поверхности, но не в прыжке
-			if(!(Mathf.Abs(dot - 1) < epsilon) && !(Mathf.Abs(dot + 1) < epsilon) && _countOfJumps == _maxCountOfJump)
+			if(!(Mathf.Abs(dot - 1) < epsilon) 
+				&& !(Mathf.Abs(dot + 1) < epsilon) 
+				&& _countOfJumps == _maxCountOfJump 
+				&& hit.distance != 0
+			)
 			{
-				m_Rigidbody2D.AddForce(Physics2D.gravity * m_Rigidbody2D.mass * 10f);
+				m_Rigidbody2D.AddForce(Physics2D.gravity * m_Rigidbody2D.mass * _gravityForce);
 			}
 
 			// If the input is moving the player right and the player is facing left...
