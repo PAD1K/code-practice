@@ -20,8 +20,13 @@ public class CharacterController2D : MonoBehaviour
     private Vector2 _circleOriginalOffset;
     [SerializeField] private float _jumpForce = 2f;
 	[SerializeField] private SurfaceSlider _slider;
-	[SerializeField] private float _gravityForce = 5f;
-	[SerializeField] private LayerMask _groundLayer;
+ 33-falling-from-corner
+
+
+	[SerializeField] private float _maxVelocityX;
+	[SerializeField] private float _maxVelocityY;
+
+ main
 	const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
 	private bool m_Grounded;            // Whether or not the player is grounded.
 	const float k_CeilingRadius = .2f; // Radius of the overlap circle to determine if the player can stand up
