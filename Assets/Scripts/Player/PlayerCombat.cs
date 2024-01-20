@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerCombat : MonoBehaviour
 {
@@ -11,7 +12,12 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private int _attackDamage = 40;
     [SerializeField] private float _attackRate = 2f;
     [SerializeField] private float _nextAttackTime = 0f;
-
+    [SerializeField] private uint _maxHealth = 100;
+    [SerializeField] private uint _minHealth = 0;
+    [SerializeField] private uint _currentHealth;
+    [SerializeField] private Bar _healtBar;
+    
+    private PlayerMovement _playerMovement;
     private PlayerInputs _input;
 
     private void Awake() 
@@ -20,6 +26,13 @@ public class PlayerCombat : MonoBehaviour
         _input.Enable();
 
         _input.Player.Attack.performed += context => Attack();
+        
+        
+        _currentHealth = _maxHealth;
+        _healtBar.SetMaxValue(_maxHealth);
+        _healtBar.SetMinValue(_minHealth);
+        _healtBar.SetValue(_maxHealth);
+        _playerMovement = GetComponent<PlayerMovement>();
     }
 
     private void Attack()
@@ -35,6 +48,8 @@ public class PlayerCombat : MonoBehaviour
                 enemy.GetComponent<Enemy>().TakeDamage(_attackDamage);
             }
 
+            _playerMovement.DecreaseStamina();
+
             _nextAttackTime = Time.time + 1f / _attackRate;
         }
     }
@@ -46,5 +61,12 @@ public class PlayerCombat : MonoBehaviour
             return;
         }
         Gizmos.DrawWireSphere(_attackPoint.position, _attackRange);
+    }
+
+    private void TakeDamage(uint damage)
+    {
+        _currentHealth -= damage;
+
+        _healtBar.SetValue(_currentHealth);
     }
 }
