@@ -4571,7 +4571,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1852654693}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.59, y: -1.88, z: 0}
+  m_LocalPosition: {x: 22.32, y: 2.51, z: 0}
   m_LocalScale: {x: 0.8779, y: 0.8779, z: 0.8779}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4594,7 +4594,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_JumpForce: 400
   m_CrouchSpeed: 0.36
-  m_MovementSmoothing: 0.05
   m_AirControl: 1
   m_WhatIsGround:
     serializedVersion: 2
@@ -4608,8 +4607,10 @@ MonoBehaviour:
   _circleCollider: {fileID: 1852654698}
   _jumpForce: 2
   _slider: {fileID: 1852654702}
-  _maxVelocityX: 5
-  _maxVelocityY: 5
+  _gravityForce: 10
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!58 &1852654698
 CircleCollider2D:
   m_ObjectHideFlags: 0
